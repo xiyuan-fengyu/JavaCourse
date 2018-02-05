@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:cache="http://www.springframework.org/schema/cache"
+	   xmlns:task="http://www.springframework.org/schema/task"
+	   xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+      	http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/cache
+		http://www.springframework.org/schema/cache/spring-cache.xsd
+		http://www.springframework.org/schema/task
+		http://www.springframework.org/schema/task/spring-task.xsd
+		">
+
+	<!-- 设置扫描@Controller,@Component, @Repository, @Transactional等注解的目录 -->
+	<context:component-scan base-package="com.xiyuan" />
+	<context:annotation-config />
+
+	<!--开启定时任务-->
+	<task:annotation-driven />
+
+	<mvc:annotation-driven />
+	<mvc:default-servlet-handler />
+
+	<!-- 打开aop注解 -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+
+	<!-- 加载配置 -->
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:property/database.properties</value>
+				<value>classpath:property/redis.properties</value>
+			</list>
+		</property>
+	</bean>
+
+
+	<!--&lt;!&ndash;mybatis、事务配置 start&ndash;&gt;-->
+	<!--<bean id="mysqlDataSource" class="org.apache.commons.dbcp.BasicDataSource">-->
+		<!--<property name="driverClassName" value="${db.driver}"/>-->
+		<!--<property name="url" value="${db.url}"/>-->
+		<!--<property name="username" value="${db.username}"/>-->
+		<!--<property name="password" value="${db.password}"/>-->
+
+		<!--<property name="validationQuery" value="select 1 from dual"/>-->
+		<!--<property name="testOnBorrow" value="true"/>-->
+
+		<!--&lt;!&ndash;连接池相关配置-->
+		 <!--参考：http://www.cnblogs.com/adolfmc/archive/2013/01/22/2872298.html-->
+		 <!--start&ndash;&gt;-->
+		<!--<property name="initialSize" value="${db.pool.initialSize}"/>-->
+		<!--<property name="maxActive" value="${db.pool.maxActive}"/>-->
+		<!--<property name="minIdle" value="${db.pool.minIdle}"/>-->
+		<!--<property name="maxIdle" value="${db.pool.maxIdle}"/>-->
+		<!--&lt;!&ndash;设置在自动回收超时连接的时候打印连接的超时错误&ndash;&gt;-->
+		<!--<property name="logAbandoned" value="true"/>-->
+		<!--&lt;!&ndash;设置自动回收超时连接 &ndash;&gt;-->
+		<!--<property name="removeAbandoned"  value="true"/>-->
+		<!--&lt;!&ndash;自动回收超时时间(单位：秒)&ndash;&gt;-->
+		<!--<property name="removeAbandonedTimeout" value="10"/>-->
+		<!--&lt;!&ndash;超时等待时间(单位：毫秒)&ndash;&gt;-->
+		<!--<property name="maxWait" value="1000"/>-->
+		<!--&lt;!&ndash;连接池相关配置 end&ndash;&gt;-->
+	<!--</bean>-->
+	<!--&lt;!&ndash; 配置数据源结束 &ndash;&gt;-->
+
+	<!--&lt;!&ndash; 配置session工厂 &ndash;&gt;-->
+	<!--<bean id="sqlSessionFactory" class="com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean">-->
+		<!--<property name="dataSource" ref="mysqlDataSource"/>-->
+		<!--<property name="mapperLocations">-->
+			<!--<array>-->
+				<!--&lt;!&ndash;通过 com.xiyuan.template.mybatis.MpGenerator 生成对应的entity，mapper，dao，xml后，解开下面两个注释&ndash;&gt;-->
+				<!--&lt;!&ndash;<value>classpath:mapper/xml/*.xml</value>&ndash;&gt;-->
+				<!--&lt;!&ndash;<value>classpath:mapper/*.xml</value>&ndash;&gt;-->
+			<!--</array>-->
+		<!--</property>-->
+	<!--</bean>-->
+
+	<!--&lt;!&ndash;查找dao&ndash;&gt;-->
+	<!--<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"-->
+		  <!--p:basePackage="com.xiyuan.*"-->
+		  <!--p:sqlSessionFactoryBeanName="sqlSessionFactory"-->
+	<!--/>-->
+
+	<!--&lt;!&ndash; 事务管理配置 &ndash;&gt;-->
+	<!--<bean id="transactionManager"-->
+		  <!--class="org.springframework.jdbc.datasource.DataSourceTransactionManager"-->
+		  <!--p:dataSource-ref="mysqlDataSource"-->
+	<!--/>-->
+	<!--<tx:annotation-driven transaction-manager="transactionManager"/>-->
+	<!--&lt;!&ndash;mybatis、事务配置 end&ndash;&gt;-->
+
+
+
+	<!--jedis 配置 start-->
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxTotal" value="${redis.pool.maxTotal}"/>
+		<property name="maxIdle" value="${redis.pool.maxIdle}"/>
+		<property name="minIdle" value="${redis.pool.minIdle}"/>
+		<property name="maxWaitMillis" value="${redis.pool.maxWaitMillis}"/>
+		<property name="testOnBorrow" value="true"/>
+		<property name="testOnReturn" value="true"/>
+	</bean>
+
+	<bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+		<constructor-arg name="poolConfig" ref="jedisPoolConfig" />
+		<constructor-arg name="host" value="${redis1.ip}" />
+		<constructor-arg name="port" value="${redis1.port}" type="int" />
+		<constructor-arg name="timeout" value="${redis1.timeout}" type="int" />
+		<constructor-arg name="password" value="${redis1.password}" />
+		<constructor-arg name="database" value="${redis1.db.index}" type="int" />
+	</bean>
+
+	<bean id="jedis" class="com.xiyuan.template.redis.JedisWrapper" p:jedisPool-ref="jedisPool"/>
+
+	<bean id="jedisPool2" class="redis.clients.jedis.JedisPool">
+		<constructor-arg name="poolConfig" ref="jedisPoolConfig" />
+		<constructor-arg name="host" value="${redis2.ip}" />
+		<constructor-arg name="port" value="${redis2.port}" type="int" />
+		<constructor-arg name="timeout" value="${redis2.timeout}" type="int" />
+		<constructor-arg name="password" value="${redis2.password}" />
+		<constructor-arg name="database" value="${redis2.db.index}" type="int" />
+	</bean>
+
+	<bean id="jedis2" class="com.xiyuan.template.redis.JedisWrapper" p:jedisPool-ref="jedisPool2"/>
+	<!--jedis 配置 end-->
+
+
+</beans>

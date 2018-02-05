@@ -1,0 +1,25 @@
+$packageStr
+
+public class Tuple#if($tNum != 2)$tNum#end <#foreach($i in [1..$tNum])T$i#if($i != $tNum), #end#end> {
+
+#foreach($i in [1..$tNum])
+#if(!$mutable)    final#else   #end public T$i t$i;
+#end
+
+    public Tuple#if($tNum != 2)$tNum#end(#foreach($i in [1..$tNum])T$i t$i#if($i != $tNum), #end#end) {
+#foreach($i in [1..$tNum])
+        this.t$i = t$i;
+#end
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getName() + "@" + this.hashCode() +
+            " {\n" +
+#foreach($i in [1..$tNum])
+            "t$i=" + t$i + "\n" +
+#end
+            "}";
+    }
+
+}
