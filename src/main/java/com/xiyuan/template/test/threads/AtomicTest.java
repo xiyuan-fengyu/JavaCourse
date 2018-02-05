@@ -9,6 +9,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AtomicTest {
 
     public static void main(String[] args) throws InterruptedException {
+        {
+            int threadNum = 100000;
+            AtomicInteger count = new AtomicInteger(0);
+            CountDownLatch countDownLatch = new CountDownLatch(threadNum);
+            for (int i = 0; i < threadNum; i++) {
+                new Thread(() -> {
+                    count.set(count.get() + 1);
+                    countDownLatch.countDown();
+                }).start();
+            }
+            countDownLatch.await();
+            System.out.println(count);
+        }
+
         int threadNum = 100000;
         AtomicInteger count = new AtomicInteger(0);
         CountDownLatch countDownLatch = new CountDownLatch(threadNum);

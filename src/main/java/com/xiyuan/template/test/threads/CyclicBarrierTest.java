@@ -15,9 +15,10 @@ public class CyclicBarrierTest {
                 @Override
                 public void run() {
                     try {
+                        System.out.println(getName() + " start");
                         Thread.sleep((long) (Math.random() * 3000));
-                        System.out.println(getName());
                         barrier.await();
+                        System.out.println(getName() + " end");
                     } catch (InterruptedException | BrokenBarrierException e) {
                         e.printStackTrace();
                     }
