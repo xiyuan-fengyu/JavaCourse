@@ -8,6 +8,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 
+import java.lang.reflect.Method;
+
 /**
  * Created by xiyuan_fengyu on 2018/2/5 15:10.
  */
@@ -26,8 +28,20 @@ public class JedisTest {
         jedis.set("test", "just");
         System.out.println(jedis.get("test"));
 
-        jedis2.set("test", "just2");
+        jedis.set("test", "just");
         System.out.println(jedis.get("test"));
+
+        jedis.set("test", "just");
+        System.out.println(jedis.get("test"));
+
+        jedis2.set("test", "just2");
+        System.out.println(jedis2.get("test"));
+
+        try {
+            Thread.sleep(5000000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
