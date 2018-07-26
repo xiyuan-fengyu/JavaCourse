@@ -1,0 +1,11 @@
+option java_package = "com.xiyuan.template.test.serialize.protobuf";
+
+message User {
+    required int64 id = 1;
+    required string name = 2;
+    required int32 age = 3;
+    required int32 sex = 4;
+}
+
+// cmd 当前目录执行，需要配置 protoc 环境变量
+// protoc --java_out=../src/main/java Protos.proto
