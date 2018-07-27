@@ -23,52 +23,37 @@ public class Pc {
                 .create().toJson(this);
     }
 
-    public interface IBuilder {
-
-        String getCpu();
-
-        String getMemory();
-
-        IBuilder setCpu(String cpu);
-
-        IBuilder setMemory(String memory);
-
-        default Pc build() {
-            Pc pc = new Pc();
-            pc.cpu = getCpu();
-            pc.memory = getMemory();
-            return pc;
-        }
-
-    }
-
-    public static class Builder implements IBuilder {
+    public static class Builder {
 
         private String cpu;
 
         private String memory;
 
-        @Override
         public String getCpu() {
-            return Builder.this.cpu;
+            return cpu;
         }
 
-        @Override
         public String getMemory() {
-            return Builder.this.memory;
+            return memory;
         }
 
-        @Override
-        public IBuilder setCpu(String cpu) {
+        public Builder setCpu(String cpu) {
             Builder.this.cpu = cpu;
             return this;
         }
 
-        @Override
-        public IBuilder setMemory(String memory) {
+        public Builder setMemory(String memory) {
             Builder.this.memory = memory;
             return this;
         }
+
+        public Pc build() {
+            Pc pc = new Pc();
+            pc.cpu = Builder.this.cpu;
+            pc.memory = Builder.this.memory;
+            return pc;
+        }
+
     }
 
 }
