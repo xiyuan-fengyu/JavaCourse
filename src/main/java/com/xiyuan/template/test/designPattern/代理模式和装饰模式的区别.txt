@@ -1,0 +1,14 @@
+两者是的类图和实际编码实现方式都十分相识
+但概念上和功能上还是有区别的
+
+代理模式用于控制对原对象的访问，也即在一些情况下甚至不会去调用原对象的方法，而且代理模式一般不会存再嵌套的情况
+在java中一般通过动jdk动态代理或者cglib子类代理来实现代理模式
+代理对象的类型（或者接口）和被代理对象保持一致，不会增加新的方法和功能
+使用场景：权限管理
+
+装饰模式用于增强被装饰对象的功能，甚至增加新的功能，装饰模式支持嵌套
+使用场景：IO
+FileOutputStream的主要功能是将字节流保存到文件中，经过 ObjectOutputStream 包装后，增加了新功能 writeObject ,可以将
+可序列化对象保存到文件
+阅读 ObjectOutputStream 源码后，会发现 ObjectOutputStream 自身实现中就出现了两次装饰嵌套
+ObjectOutputStream -> BlockDataOutputStream -> DataOutputStream -> OutputStream
